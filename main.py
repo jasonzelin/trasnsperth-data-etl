@@ -15,28 +15,8 @@ if not config_path.exists():
 with open(config_path) as f:
     CONFIG = json.load(f)
 
-# ---------------------------------------------------------------------------
-# LOGGING
-# ---------------------------------------------------------------------------
-def setup_logging(log_dir: str) -> utils.logging.Logger:
-    Path(log_dir).mkdir(parents=True, exist_ok=True)
-    log_file = Path(log_dir) / f"ingest_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
-
-    utils.logging.basicConfig(
-        level=utils.logging.INFO,
-        format="%(asctime)s | %(levelname)s | %(message)s",
-        handlers=[
-            utils.logging.FileHandler(log_file),
-            utils.logging.StreamHandler(),          # also print to console
-        ],
-    )
-    return utils.logging.getLogger(__name__)
-
-# ---------------------------------------------------------------------------
-# MAIN FUNCTION
-# ---------------------------------------------------------------------------
 def main():
-    logger = setup_logging(CONFIG["log_dir"])
+    logger = utils.setup_logging(CONFIG["log_dir"])
     logger.info("Starting Transperth GTFS ingestion")
 
     # 1. Download

@@ -219,6 +219,9 @@ def ingest_to_bigquery(
     
     os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'service_account.json'
     client = Client()
+
+    logger.info("Starting ingestion to BigQuery...")
+    logger.info("-" * 55)
     for name, df in dataframes.items():
         table_id = f"{client.project}.google_transit.{name}"
         
@@ -228,5 +231,7 @@ def ingest_to_bigquery(
             destination_table=table_id,
             if_exists='replace',
             bigquery_client=client
-)
+        )
         logger.info(f"Data successfully ingested into BigQuery table: {table_id}!")
+    logger.info("-" * 55)
+    logger.info("All tables successfully ingested into BigQuery. Ingestion complete ✓")
