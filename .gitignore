@@ -223,3 +223,9 @@ test.ipynb
 # VS Code Settings
 .vscode
 git
+data/raw/calendar_dates.csv
+data/raw/calendar.csv
+data/raw/routes.csv
+data/raw/stops.csv
+data/raw/trips.csv
+data/raw/stop_times.csv
