@@ -19,7 +19,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dbt
-        run: pip install dbt-bigquery==1.11.12
+        run: pip install dbt-bigquery
         
       - name: Debug environment
         run: |
