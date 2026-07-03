@@ -48,6 +48,29 @@ jobs:
           cd dbt_transperth
           dbt docs generate --target prod
 
+      - name: Inline JSON into index.html
+        run: |
+          python3 << 'EOF'
+          import json
+          from pathlib import Path
+
+          target = Path("dbt_transperth/target")
+
+          manifest = json.loads((target / "manifest.json").read_text())
+          catalog  = json.loads((target / "catalog.json").read_text())
+
+          index_html = (target / "index.html").read_text()
+
+          # dbt's index.html has placeholder strings it expects to be replaced
+          index_html = index_html.replace(
+              "o=[i('manifest','manifest.json'+t),i('catalog','catalog.json'+t)]",
+              f"o=[{{label: 'manifest', data: {json.dumps(manifest)}}},{{label: 'catalog', data: {json.dumps(catalog)}}}]"
+          )
+
+          (target / "index.html").write_text(index_html)
+          print("Done — JSON inlined into index.html")
+          EOF
+
       - name: Move docs to /docs folder
         run: |
           mkdir -p docs
