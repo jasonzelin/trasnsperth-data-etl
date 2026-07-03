@@ -8,6 +8,10 @@ on:
 jobs:
   deploy_docs:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write      # ← allows the bot to push to gh-pages branch
+    env:
+      GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
 
     steps:
       - name: Checkout repo
