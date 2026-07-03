@@ -9,6 +9,7 @@
         "trips.txt",
         "stop_times.txt",
         "calendar.txt",
-        "calendar_dates.txt"
+        "calendar_dates.txt",
+        "fare_attributes.txt"
     ]
 }
