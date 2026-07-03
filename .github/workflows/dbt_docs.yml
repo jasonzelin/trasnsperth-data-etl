@@ -64,6 +64,8 @@ jobs:
 
           echo "=== sources.yml content ==="
           cat dbt_transperth/models/bronze/source.yml
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} 
 
       - name: Write service account key
         run: |
@@ -92,6 +94,8 @@ jobs:
           cd dbt_transperth
           dbt compile --target prod
           dbt docs generate --target prod
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }} 
 
       - name: Inline JSON into index.html
         run: |
