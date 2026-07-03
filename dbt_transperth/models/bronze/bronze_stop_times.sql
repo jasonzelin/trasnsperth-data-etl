@@ -1,5 +1,5 @@
 with source as (
-    select * from {{ source('google_transit', 'stop_times') }}
+    select * from {{ ref('stop_times') }}
 )
 
 ,raw as (
