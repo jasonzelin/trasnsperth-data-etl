@@ -1,0 +1,220 @@
+version: 2
+
+models:
+  - name: bronze_routes
+    description: >
+      Cleaned routes table from the Transperth GTFS feed.
+      One row per route (bus, rail, or ferry line).
+    columns:
+      - name: route_id
+        description: Unique identifier for each route.
+        tests:
+          - unique
+          - not_null
+
+      - name: route_short_name
+        description: Short public-facing name of the route (e.g. "400", "CAT").
+        tests:
+          - not_null
+
+      - name: route_long_name
+        description: Full descriptive name of the route.
+
+      - name: route_type
+        description: >
+          GTFS numeric code for the transport mode.
+          2 = Rail, 3 = Bus, 4 = Ferry.
+        tests:
+          - not_null
+
+      - name: route_type_label
+        description: Human-readable label derived from route_type (Rail, Bus, Ferry).
+
+  # ---------------------------------------------------------------------------
+
+  - name: bronze_stops
+    description: >
+      Cleaned stops table from the Transperth GTFS feed.
+      One row per physical stop or station, with geographic coordinates.
+    columns:
+      - name: stop_id
+        description: Unique identifier for each stop.
+        tests:
+          - unique
+          - not_null
+
+      - name: stop_name
+        description: Public-facing name of the stop or station.
+        tests:
+          - not_null
+
+      - name: stop_lat
+        description: Latitude coordinate of the stop (decimal degrees, WGS84).
+        tests:
+          - not_null
+
+      - name: stop_lon
+        description: Longitude coordinate of the stop (decimal degrees, WGS84).
+        tests:
+          - not_null
+
+      - name: _has_coordinates
+        description: >
+          Boolean flag. True if both stop_lat and stop_lon are present.
+          Used as a data quality indicator downstream.
+
+  # ---------------------------------------------------------------------------
+
+  - name: bronze_trips
+    description: >
+      Cleaned trips table from the Transperth GTFS feed.
+      One row per scheduled trip. A trip is a single run of a route
+      in one direction (e.g. the 7:32am outbound Mandurah Line service).
+    columns:
+      - name: trip_id
+        description: Unique identifier for each trip.
+        tests:
+          - unique
+          - not_null
+
+      - name: route_id
+        description: Foreign key to bronze_routes.
+        tests:
+          - not_null
+
+      - name: service_id
+        description: >
+          Foreign key to bronze_calendar. Links the trip to the days
+          of the week on which it operates.
+        tests:
+          - not_null
+
+      - name: direction_id
+        description: >
+          GTFS direction code. 0 = Outbound, 1 = Inbound.
+
+      - name: direction_label
+        description: Human-readable direction label (Outbound or Inbound).
+
+  # ---------------------------------------------------------------------------
+
+  - name: bronze_stop_times
+    description: >
+      Cleaned stop_times table from the Transperth GTFS feed.
+      One row per stop on each trip. This is the largest table in the feed —
+      it records every scheduled arrival and departure at every stop.
+    columns:
+      - name: trip_id
+        description: Foreign key to bronze_trips.
+        tests:
+          - not_null
+
+      - name: stop_id
+        description: Foreign key to bronze_stops.
+        tests:
+          - not_null
+
+      - name: stop_sequence
+        description: >
+          The order of this stop within its trip. Starts at 1.
+          Used to reconstruct the ordered path of a trip.
+        tests:
+          - not_null
+
+      - name: arrival_time
+        description: >
+          Scheduled arrival time in HH:MM:SS format.
+          Note: GTFS allows values beyond 24:00:00 for overnight services.
+          Kept as a string to preserve these values.
+
+      - name: departure_time
+        description: >
+          Scheduled departure time in HH:MM:SS format.
+          Same overflow convention as arrival_time.
+
+  # ---------------------------------------------------------------------------
+
+  - name: bronze_calendar
+    description: >
+      Cleaned calendar table from the Transperth GTFS feed.
+      Defines which days of the week each service_id operates,
+      and the date range during which the schedule is valid.
+    columns:
+      - name: service_id
+        description: Unique identifier for a service pattern.
+        tests:
+          - unique
+          - not_null
+
+      - name: monday
+        description: 1 if the service runs on Mondays, 0 otherwise.
+        tests:
+          - not_null
+
+      - name: tuesday
+        description: 1 if the service runs on Tuesdays, 0 otherwise.
+        tests:
+          - not_null
+
+      - name: wednesday
+        description: 1 if the service runs on Wednesdays, 0 otherwise.
+        tests:
+          - not_null
+
+      - name: thursday
+        description: 1 if the service runs on Thursdays, 0 otherwise.
+        tests:
+          - not_null
+
+      - name: friday
+        description: 1 if the service runs on Fridays, 0 otherwise.
+        tests:
+          - not_null
+
+      - name: saturday
+        description: 1 if the service runs on Saturdays, 0 otherwise.
+        tests:
+          - not_null
+
+      - name: sunday
+        description: 1 if the service runs on Sundays, 0 otherwise.
+        tests:
+          - not_null
+
+      - name: start_date
+        description: First date on which this service pattern is valid (YYYY-MM-DD).
+        tests:
+          - not_null
+
+      - name: end_date
+        description: Last date on which this service pattern is valid (YYYY-MM-DD).
+        tests:
+          - not_null
+
+  # ---------------------------------------------------------------------------
+
+  - name: bronze_calendar_dates
+    description: >
+      Cleaned calendar_dates table from the Transperth GTFS feed.
+      Records exceptions to the regular weekly schedule — services added
+      or removed on specific dates (e.g. public holidays, special events).
+    columns:
+      - name: service_id
+        description: Foreign key to bronze_calendar.
+        tests:
+          - not_null
+
+      - name: date
+        description: The specific date on which the exception applies (YYYY-MM-DD).
+        tests:
+          - not_null
+
+      - name: exception_type
+        description: >
+          GTFS exception code. 1 = service added on this date,
+          2 = service removed on this date.
+        tests:
+          - not_null
+
+      - name: exception_label
+        description: Human-readable exception label (Added or Removed).

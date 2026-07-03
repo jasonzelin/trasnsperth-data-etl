@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: google_transit
+    database: "{{ env_var('GCP_PROJECT_ID') }}"
+    schema: google_transit
+    tables:
+      - name: routes
+      - name: stops
+      - name: trips
+      - name: stop_times
+      - name: calendar
+      - name: calendar_dates

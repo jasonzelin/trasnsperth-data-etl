@@ -1,0 +1,102 @@
+version: 2
+
+models:
+  - name: silver_stops
+    description: >
+      Cleaned stops table from the Transperth GTFS feed.
+      One row per physical stop or station, with geographic coordinates.
+    columns:
+      - name: stop_id
+        description: Unique identifier for each stop.
+        tests:
+          - unique
+          - not_null
+
+      - name: stop_name
+        description: Public-facing name of the stop or station.
+        tests:
+          - not_null
+
+      - name: stop_lat
+        description: Latitude coordinate of the stop (decimal degrees, WGS84).
+        tests:
+          - not_null
+
+      - name: stop_lon
+        description: Longitude coordinate of the stop (decimal degrees, WGS84).
+        tests:
+          - not_null
+
+      - name: _has_coordinates
+        description: >
+          Boolean flag. True if both stop_lat and stop_lon are present.
+          Used as a data quality indicator downstream.
+
+  # ---------------------------------------------------------------------------
+
+  - name: silver_trips
+    description: >
+      Cleaned trips table from the Transperth GTFS feed.
+      One row per scheduled trip. A trip is a single run of a route
+      in one direction (e.g. the 7:32am outbound Mandurah Line service).
+    columns:
+      - name: trip_id
+        description: Unique identifier for each trip.
+        tests:
+          - unique
+          - not_null
+
+      - name: route_id
+        description: Foreign key to silver_routes.
+        tests:
+          - not_null
+
+      - name: service_id
+        description: >
+          Foreign key to silver_calendar. Links the trip to the days
+          of the week on which it operates.
+        tests:
+          - not_null
+
+      - name: direction_id
+        description: >
+          GTFS direction code. 0 = Outbound, 1 = Inbound.
+
+      - name: direction_label
+        description: Human-readable direction label (Outbound or Inbound).
+
+  # ---------------------------------------------------------------------------
+
+  - name: silver_stop_times
+    description: >
+      Cleaned stop_times table from the Transperth GTFS feed.
+      One row per stop on each trip. This is the largest table in the feed —
+      it records every scheduled arrival and departure at every stop.
+    columns:
+      - name: trip_id
+        description: Foreign key to silver_trips.
+        tests:
+          - not_null
+
+      - name: stop_id
+        description: Foreign key to silver_stops.
+        tests:
+          - not_null
+
+      - name: stop_sequence
+        description: >
+          The order of this stop within its trip. Starts at 1.
+          Used to reconstruct the ordered path of a trip.
+        tests:
+          - not_null
+
+      - name: arrival_time
+        description: >
+          Scheduled arrival time in HH:MM:SS format.
+          Note: GTFS allows values beyond 24:00:00 for overnight services.
+          Kept as a string to preserve these values.
+
+      - name: departure_time
+        description: >
+          Scheduled departure time in HH:MM:SS format.
+          Same overflow convention as arrival_time.

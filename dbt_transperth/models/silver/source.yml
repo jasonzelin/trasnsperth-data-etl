@@ -1,0 +1,13 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: "{{ env_var('GCP_PROJECT_ID') }}"
+    schema: bronze
+    tables:
+      - name: bronze_routes
+      - name: bronze_stops
+      - name: bronze_trips
+      - name: bronze_stop_times
+      - name: bronze_calendar
+      - name: bronze_calendar_dates
