@@ -19,7 +19,21 @@ jobs:
           python-version: "3.12"
 
       - name: Install dbt
-        run: pip install dbt-bigquery
+        run: pip install dbt-bigquery==1.11.12
+        
+      - name: Debug environment
+        run: |
+          echo "=== dbt version ==="
+          dbt --version
+
+          echo "=== profiles.yml content ==="
+          cat ~/.dbt/profiles.yml
+
+          echo "=== project directory structure ==="
+          find dbt_transperth/models -name "*.yml" | sort
+
+          echo "=== sources.yml content ==="
+          cat dbt_transperth/models/bronze/sources.yml
 
       - name: Write service account key
         run: |
@@ -36,7 +50,7 @@ jobs:
                 type: bigquery
                 method: service-account
                 project: ${{ secrets.GCP_PROJECT_ID }}
-                dataset: gold
+                dataset: prod
                 keyfile: /tmp/sa_key.json
                 location: us-central1
                 threads: 4
@@ -46,6 +60,7 @@ jobs:
       - name: Generate dbt docs
         run: |
           cd dbt_transperth
+          dbt compile --target prod
           dbt docs generate --target prod
 
       - name: Inline JSON into index.html
