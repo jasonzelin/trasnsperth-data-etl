@@ -234,10 +234,4 @@ data/raw/stop_times.csv
 
 # Service Account Keys & Configs
 service_account*.json
-dbt_transperth/models/bronze/source.yml
-dbt_transperth/models/silver/source.yml
-dbt_transperth/models/gold/source.yml
-dbt_transperth/models/bronze/schema.yml
-dbt_transperth/models/silver/schema.yml
-dbt_transperth/models/gold/schema.yml
 dbt_transperth/profiles.yml
