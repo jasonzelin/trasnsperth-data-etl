@@ -21,6 +21,36 @@ jobs:
       - name: Install dbt
         run: pip install dbt-bigquery
         
+      - name: Write profiles.yml
+        run: |
+          mkdir -p /home/runner/.dbt
+          python3 << 'EOF'
+          import os
+
+          profiles_content = f"""
+          dbt_transperth:
+            target: prod
+            outputs:
+              prod:
+                type: bigquery
+                method: service-account
+                project: {os.environ['GCP_PROJECT_ID']}
+                dataset: prod
+                keyfile: /tmp/sa_key.json
+                location: us-central1
+                threads: 4
+                timeout_seconds: 300
+          """
+
+          with open("/home/runner/.dbt/profiles.yml", "w") as f:
+              f.write(profiles_content.strip())
+
+          print("profiles.yml written successfully")
+          print(open("/home/runner/.dbt/profiles.yml").read())
+          EOF
+        env:
+          GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+
       - name: Debug environment
         run: |
           echo "=== dbt version ==="
