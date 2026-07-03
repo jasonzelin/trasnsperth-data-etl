@@ -1,1 +1,0 @@
-# trasnsperth-data-etl
