@@ -235,3 +235,7 @@ data/raw/stop_times.csv
 # Service Account Keys & Configs
 service_account*.json
 dbt_transperth/profiles.yml
+
+# Airflow-related Ignores
+airflow/logs
+airflow_env

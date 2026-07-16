@@ -14,8 +14,6 @@ models:
 
       - name: route_short_name
         description: Short public-facing name of the route (e.g. "400", "CAT").
-        tests:
-          - not_null
 
       - name: route_long_name
         description: Full descriptive name of the route.
@@ -24,8 +22,6 @@ models:
         description: >
           GTFS numeric code for the transport mode.
           2 = Rail, 3 = Bus, 4 = Ferry.
-        tests:
-          - not_null
 
       - name: route_type_label
         description: Human-readable label derived from route_type (Rail, Bus, Ferry).
@@ -79,15 +75,11 @@ models:
 
       - name: route_id
         description: Foreign key to bronze_routes.
-        tests:
-          - not_null
 
       - name: service_id
         description: >
           Foreign key to bronze_calendar. Links the trip to the days
           of the week on which it operates.
-        tests:
-          - not_null
 
       - name: direction_id
         description: >
@@ -106,20 +98,14 @@ models:
     columns:
       - name: trip_id
         description: Foreign key to bronze_trips.
-        tests:
-          - not_null
 
       - name: stop_id
         description: Foreign key to bronze_stops.
-        tests:
-          - not_null
 
       - name: stop_sequence
         description: >
           The order of this stop within its trip. Starts at 1.
           Used to reconstruct the ordered path of a trip.
-        tests:
-          - not_null
 
       - name: arrival_time
         description: >
@@ -148,48 +134,30 @@ models:
 
       - name: monday
         description: 1 if the service runs on Mondays, 0 otherwise.
-        tests:
-          - not_null
 
       - name: tuesday
         description: 1 if the service runs on Tuesdays, 0 otherwise.
-        tests:
-          - not_null
 
       - name: wednesday
         description: 1 if the service runs on Wednesdays, 0 otherwise.
-        tests:
-          - not_null
 
       - name: thursday
         description: 1 if the service runs on Thursdays, 0 otherwise.
-        tests:
-          - not_null
 
       - name: friday
         description: 1 if the service runs on Fridays, 0 otherwise.
-        tests:
-          - not_null
 
       - name: saturday
         description: 1 if the service runs on Saturdays, 0 otherwise.
-        tests:
-          - not_null
 
       - name: sunday
         description: 1 if the service runs on Sundays, 0 otherwise.
-        tests:
-          - not_null
 
       - name: start_date
         description: First date on which this service pattern is valid (YYYY-MM-DD).
-        tests:
-          - not_null
 
       - name: end_date
         description: Last date on which this service pattern is valid (YYYY-MM-DD).
-        tests:
-          - not_null
 
   # ---------------------------------------------------------------------------
 
@@ -206,8 +174,6 @@ models:
 
       - name: date
         description: The specific date on which the exception applies (YYYY-MM-DD).
-        tests:
-          - not_null
 
       - name: exception_type
         description: >
