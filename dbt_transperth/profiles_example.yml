@@ -1,0 +1,32 @@
+# profiles.yml
+# -------------
+# Tells dbt how to connect to BigQuery
+
+dbt_transperth:
+  target: dev # Default target to use for dbt commands. This can be overridden with the --target flag.
+  outputs:
+
+    # -------------------------------------------------------------------------
+    # DEV — local development environment
+    dev:
+      type: bigquery
+      method: service-account
+      project: your-project-id
+      dataset: dev
+      keyfile: ../service_account.json
+      location: us-central1
+      threads: 4
+      timeout_seconds: 300
+
+    # -------------------------------------------------------------------------
+    # PROD — production environment
+    # -------------------------------------------------------------------------
+    prod:
+      type: bigquery
+      method: service-account
+      project: your-project-id
+      dataset: prod
+      keyfile: ../service_account.json
+      location: us-central1
+      threads: 4
+      timeout_seconds: 300
