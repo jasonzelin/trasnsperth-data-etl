@@ -1,9 +1,9 @@
 {
-  "run_timestamp": "2026-07-01T09:07:05.094084Z",
+  "run_timestamp": "2026-07-17T01:53:30.926619Z",
   "source": "Transperth GTFS Static Feed",
   "tables": {
     "routes": {
-      "rows": 435,
+      "rows": 427,
       "columns": [
         "route_id",
         "agency_id",
@@ -19,7 +19,7 @@
       "output_path": "data/raw/routes.csv"
     },
     "stops": {
-      "rows": 14870,
+      "rows": 14877,
       "columns": [
         "location_type",
         "parent_station",
@@ -37,7 +37,7 @@
       "output_path": "data/raw/stops.csv"
     },
     "trips": {
-      "rows": 65215,
+      "rows": 59030,
       "columns": [
         "route_id",
         "service_id",
@@ -50,7 +50,7 @@
       "output_path": "data/raw/trips.csv"
     },
     "stop_times": {
-      "rows": 1930229,
+      "rows": 1726261,
       "columns": [
         "trip_id",
         "arrival_time",
@@ -67,7 +67,7 @@
       "output_path": "data/raw/stop_times.csv"
     },
     "calendar": {
-      "rows": 3090,
+      "rows": 2502,
       "columns": [
         "service_id",
         "monday",
@@ -83,7 +83,7 @@
       "output_path": "data/raw/calendar.csv"
     },
     "calendar_dates": {
-      "rows": 12479,
+      "rows": 11613,
       "columns": [
         "service_id",
         "date",

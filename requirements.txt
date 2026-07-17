@@ -3,3 +3,4 @@ requests
 google-cloud-bigquery
 pandas-gbq
 dbt-bigquery
+apache-airflow

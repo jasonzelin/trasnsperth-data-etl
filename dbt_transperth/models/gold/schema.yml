@@ -1,18 +1,47 @@
 version: 2
 
 models:
-  - name: gold_stop_times
+  - name: gold_routes_summary
     description: >
-      Cleaned stops table from the Transperth GTFS feed.
-      One row per physical stop or station, with geographic coordinates.
+      Summary of route information including trip counts and direction-specific trip counts.
     columns:
-      - name: trip_headsign
-        description: Public-facing name of the trip, usually the destination or route variant.
+      - name: route_id
+        description: Unique identifier for each route.
         data_tests:
           - not_null
 
-      - name: direction_label
-        description: Human-readable label for the direction of travel (e.g. "Outbound", "Inbound").
+      - name: route_short_name
+        description: Short public-facing name of the route (e.g. "400", "CAT").
+
+      - name: route_long_name
+        description: Full descriptive name of the route.
+
+      - name: route_type_label
+        description: Human-readable label for the transport mode (e.g. "Bus", "Rail").
+        data_tests:
+          - not_null
+
+      - name: total_trips
+        description: Total number of trips for the route.
+        data_tests:
+          - not_null
+
+      - name: outbound_trips
+        description: Number of outbound trips for the route.
+        data_tests:
+          - not_null
+
+      - name: inbound_trips
+        description: Number of inbound trips for the route.
+        data_tests:
+          - not_null
+
+  - name: gold_stop_times_summary
+    description: >
+      Summary of stop times information including stop counts and transport mode-specific stop counts.
+    columns:
+      - name: stop_id
+        description: Unique identifier for each stop.
         data_tests:
           - not_null
 
@@ -22,30 +51,15 @@ models:
           - not_null
 
       - name: supported_modes
-        description: Comma-separated list of transport modes that serve this stop (e.g. "Bus, Rail").
+        description: Comma-separated list of transport modes that serve the stop (e.g. "Bus, Rail").
         data_tests:
           - not_null
-
-      - name: arrival_time
-        description: >
-          Scheduled arrival time in HH:MM:SS format.
-          Note: GTFS allows values beyond 24:00:00 for overnight services.
-          Kept as a string to preserve these values.
-
-      - name: departure_time
-        description: >
-          Scheduled departure time in HH:MM:SS format.
-          Note: GTFS allows values beyond 24:00:00 for overnight services.
-          Kept as a string to preserve these values.
 
       - name: stop_lat
-        description: Latitude of the stop or station in decimal degrees.
-        data_tests:
-          - not_null
+        description: Latitude coordinate of the stop (decimal degrees, WGS84).
 
       - name: stop_lon
-        description: Longitude of the stop or station in decimal degrees.
-        data_tests:
-          - not_null
+        description: Longitude coordinate of the stop (decimal degrees, WGS84).
 
-  # ---------------------------------------------------------------------------
+      - name: total_arrivals
+        description: Total number of arrivals at the stop.
