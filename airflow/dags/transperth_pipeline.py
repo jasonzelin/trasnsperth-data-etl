@@ -16,6 +16,7 @@ import os
 import subprocess
 from datetime import datetime, timedelta
 from pathlib import Path
+from dbt import task
 from dotenv import load_dotenv
 
 from airflow import DAG
@@ -240,4 +241,4 @@ with DAG(
     # -----------------------------------------------------------------------
     # Task dependencies — defines the execution order
     # -----------------------------------------------------------------------
-    # run_ingestion >> upload_to_bigquery >> dbt_run >> dbt_test >> notify_success
+    task_ingest >> task_upload >> task_dbt_run >> task_dbt_test >> task_notify
