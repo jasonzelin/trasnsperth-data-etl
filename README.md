@@ -8,44 +8,7 @@ An end-to-end data engineering portfolio project that ingests, transforms, and v
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                        ORCHESTRATION                            │
-│                    Apache Airflow (local)                       │
-│          runs daily at 6am AWST on a scheduled DAG             │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-          ┌──────────────┼──────────────┐
-          ▼              ▼              ▼
-   ┌─────────────┐ ┌──────────┐ ┌──────────────┐
-   │  INGESTION  │ │  LOAD    │ │  TRANSFORM   │
-   │             │ │          │ │              │
-   │  Python     │ │ BigQuery │ │     dbt      │
-   │  requests   │ │ (bronze) │ │              │
-   │  pandas     │ │          │ │ bronze       │
-   │             │ │          │ │   → silver   │
-   │ GTFS Static │ │          │ │     → gold   │
-   │ Feed (ZIP)  │ │          │ │              │
-   └──────┬──────┘ └────┬─────┘ └──────┬───────┘
-          │              │              │
-          ▼              ▼              ▼
-   ┌─────────────────────────────────────────────┐
-   │              Google BigQuery                │
-   │                                             │
-   │  bronze  →  silver  →  gold                 │
-   │  (raw)      (clean)    (aggregated)         │
-   └─────────────────────────┬───────────────────┘
-                             │
-                             ▼
-                  ┌─────────────────────┐
-                  │   Looker Studio     │
-                  │   Dashboard         │
-                  │                     │
-                  │  Network Overview   │
-                  │  Route Analysis     │
-                  │  Stop Frequency Map │
-                  └─────────────────────┘
-```
+![Data Architecture](images/data_architecture.png)
 
 ### Data Flow
 
@@ -211,6 +174,8 @@ Open `http://localhost:8080` in your browser, log in with the printed credential
 The Looker Studio dashboard connects directly to the BigQuery gold layer and shows high-level descriptive numbers of the Transperth public transport network. In summary, the dashboard shows 3 parts of visualizations: (1) Total numbers of routes, trips, stops and arrivals; (2) Route distribution per transport mode & Top 10 Routes; (3) Geomap of stops served by Transperth.
 
 👉 **[Open the live dashboard](https://datastudio.google.com/reporting/a40d9d25-a4e0-4ac4-8b33-2922280c150b)**
+
+![Looker Studio Dashboard](images/looker_studio_dashboard.png)
 
 ---
 
