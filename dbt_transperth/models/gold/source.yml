@@ -2,9 +2,10 @@ version: 2
 
 sources:
   - name: silver
-    database: pure-stronghold-465405-e7
+    database: "{{ env_var('GCP_PROJECT_ID') }}"
     schema: silver
     tables:
       - name: silver_stops
       - name: silver_trips
       - name: silver_stop_times
+      - name: silver_routes
